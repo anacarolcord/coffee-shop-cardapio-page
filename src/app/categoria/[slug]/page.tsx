@@ -11,7 +11,7 @@ interface CategoryPageProps {
   }>;
 }
 
-// Componente interno assíncrono que lê os params e busca os produtos
+// Componente interno assíncrono que lê os parâmetros e procura os produtos
 async function CategoryProducts({ params }: { params: Promise<{ slug: string }> }) {
   await connection();
   const { slug } = await params;
@@ -47,13 +47,13 @@ async function CategoryProducts({ params }: { params: Promise<{ slug: string }> 
 }
 
 export default async function Page({ params }: CategoryPageProps) {
-  // Resolvemos o slug de forma segura para exibir no cabeçalho
+  // Resolve os parâmetros para obter o nome da categoria para o cabeçalho
   const resolvedParams = await params;
   const categoryName = decodeURIComponent(resolvedParams.slug);
 
   return (
     <div className="min-h-screen bg-[#FF8C00] flex flex-col font-sans">
-      {/* Header com botão de voltar */}
+      {/* Cabeçalho com o botão de voltar */}
       <header className="bg-white shadow-md py-6 px-4 text-center border-b-4 border-[#004AAD] relative flex items-center justify-center">
         <Link
           href="/"
@@ -79,10 +79,10 @@ export default async function Page({ params }: CategoryPageProps) {
         </Suspense>
       </main>
 
-      {/* Footer */}
+      {/* Rodapé */}
       <footer className="bg-white py-4 text-center border-t border-orange-200 mt-auto">
         <p className="text-[#004AAD] font-semibold text-xs font-poppins">
-          © Tragos Leves Original - Cardápio Digital
+          Tragos Leves Original - Cardápio Digital
         </p>
       </footer>
     </div>
