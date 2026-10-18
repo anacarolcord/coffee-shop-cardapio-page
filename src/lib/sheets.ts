@@ -4,6 +4,7 @@ const GOOGLE_SHEETS_API_KEY = process.env.GOOGLE_SHEETS_API_KEY!;
 const GOOGLE_SHEET_ID = process.env.GOOGLE_SHEET_ID!;
 const SHEET_RANGE = 'Produtos!A2:H1000'; // Pula header
 
+
 export async function getProducts(revalidate: number = 3600) {
   try {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEET_ID}/values/${SHEET_RANGE}?key=${GOOGLE_SHEETS_API_KEY}`;
@@ -13,6 +14,8 @@ export async function getProducts(revalidate: number = 3600) {
     });
 
     if (!response.ok) {
+      const errorBody = await response.text();
+      console.error('Detalhes do erro do Google:', errorBody);
       throw new Error(`Erro ao buscar planilha: ${response.statusText}`);
     }
 
@@ -23,22 +26,26 @@ export async function getProducts(revalidate: number = 3600) {
       return [];
     }
 
-    // Converte linhas para objetos Product
-    const products = rows.map(row => {
-      // Normaliza disponivel
-      const disponivel =
-        row[6]?.toUpperCase() === 'TRUE' ||
-        row[6]?.toUpperCase() === 'ATIVO';
+    // Mapeamento baseado na ordem atual das colunas na sua planilha:
+    // A: Categoria, B: Nome, C: Descricao, D: Preco, E: Status
+    const products = rows.map((row, index) => {
+      const categoria = row[0] || '';
+      const nome = row[1] || '';
+      const descricao = row[2] === '-' ? null : (row[2] || null);
+      const preco = parseFloat(String(row[3] || '0').replace(',', '.'));
+      const statusStr = row[4] || 'Ativo';
+      
+      const disponivel = statusStr.toUpperCase() === 'ATIVO' || statusStr.toUpperCase() === 'TRUE';
 
       return {
-        id: row[0] || '',
-        nome: row[1] || '',
-        descricao: row[2] || null,
-        preco: parseFloat(String(row[3] || '0').replace(',', '.')),
-        categoria: row[4] || '',
-        imagem_url: row[5] || null,
+        id: `prod-${index + 1}`, // Gera um ID único baseado na linha
+        nome,
+        descricao,
+        preco,
+        categoria,
+        imagem_url: null,
         disponivel,
-        ordem: row[7] ? parseInt(row[7], 10) : null,
+        ordem: index + 1,
       };
     });
 
