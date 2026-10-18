@@ -1,114 +1,64 @@
 import { Suspense } from 'react';
 import { connection } from 'next/server';
+import Link from 'next/link';
 import { getProducts } from '@/lib/sheets';
 import { filterAvailableProducts, groupByCategory } from '@/lib/utils';
-import { ProductCard } from '@/components/ProductCard';
 
-// Componente assíncrono que realiza a chamada do Google Sheets
-async function MenuContent() {
-  // Força o componente a rodar dinamicamente no request (resolve o aviso do Next.js 16)
+async function CategoryList() {
   await connection();
-
-  let allProducts;
-  let error = null;
-
-  try {
-    allProducts = await getProducts();
-  } catch (e) {
-    error = e instanceof Error ? e.message : 'Erro desconhecido';
-    allProducts = [];
-  }
-
-  if (error) {
-    return (
-      <main className="flex-1 container-custom section-spacing">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-red-600 mb-2">
-            Erro ao carregar cardápio
-          </h2>
-          <p className="text-red-700">{error}</p>
-          <p className="text-sm text-red-600 mt-4">
-            Verifique se o GOOGLE_SHEET_ID no arquivo .env.local está correto e se a planilha está pública.
-          </p>
-        </div>
-      </main>
-    );
-  }
-
+  const allProducts = await getProducts();
   const availableProducts = filterAvailableProducts(allProducts);
   const categories = groupByCategory(availableProducts);
 
   if (categories.length === 0) {
-    return (
-      <main className="flex-1 container-custom section-spacing">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-neutral-600 mb-4">
-            Nenhum produto disponível
-          </h2>
-          <p className="text-neutral-500">
-            Adicione produtos na planilha Google Sheets e marque-os como ativos.
-          </p>
-        </div>
-      </main>
-    );
+    return <p className="text-white text-center font-poppins">Nenhuma categoria encontrada.</p>;
   }
 
   return (
-    <main className="flex-1">
-      {categories.map((category, categoryIndex) => (
-        <section key={category.name} className="section-spacing">
-          <div className="container-custom">
-            <h2 className="text-2xl font-bold text-secondary mb-8 font-display">
-              {category.name}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {category.products.map((product, productIndex) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  priority={categoryIndex === 0 && productIndex < 3}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
+    <nav className="flex flex-col items-center gap-6 my-6">
+      {categories.map((cat) => (
+        <Link
+          key={cat.name}
+          href={`/categoria/${encodeURIComponent(cat.name)}`}
+          className="text-2xl sm:text-3xl font-black text-white font-poppins uppercase tracking-wider hover:text-[#004AAD] transition-colors text-center"
+        >
+          {cat.name}
+        </Link>
       ))}
-    </main>
+    </nav>
   );
 }
 
-// Componente da Página Principal
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm py-6">
-        <div className="container-custom">
-          <h1 className="text-3xl font-bold text-secondary font-display">
-            Smart Menu
-          </h1>
-          <p className="text-neutral-600 mt-1">Cardápio Digital</p>
-        </div>
+    <div className="min-h-screen bg-[#FF8C00] flex flex-col justify-between items-center py-12 px-4 font-sans">
+      {/* Topo / Logo */}
+      <header className="text-center mt-6">
+        <h1 className="text-4xl sm:text-5xl font-black text-white font-poppins uppercase tracking-widest mb-2">
+          Smart Menu
+        </h1>
+        <div className="w-16 h-1.5 bg-[#004AAD] mx-auto rounded-full mb-6"></div>
+        <p className="text-white/90 text-sm font-semibold uppercase tracking-wider font-poppins">
+          Toque em uma categoria
+        </p>
       </header>
 
-      {/* Conteúdo envolto com Suspense */}
-      <Suspense
-        fallback={
-          <div className="flex-1 container-custom section-spacing flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF751F]"></div>
-          </div>
-        }
-      >
-        <MenuContent />
-      </Suspense>
+      {/* Lista de Categorias Estilo Referência */}
+      <main className="w-full max-w-md flex flex-col items-center">
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center py-10">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+            </div>
+          }
+        >
+          <CategoryList />
+        </Suspense>
+      </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-neutral-200 py-8">
-        <div className="container-custom text-center">
-          <p className="text-neutral-600 text-sm">
-            © 2026 Smart Menu - Cardápio Digital
-          </p>
-        </div>
+      {/* Rodapé */}
+      <footer className="text-center text-white/80 text-xs font-poppins mt-auto pt-8">
+        © Smart Menu - Cardápio Digital
       </footer>
     </div>
   );

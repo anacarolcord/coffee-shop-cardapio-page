@@ -7,49 +7,45 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
   return (
     <article
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300"
+      className="w-full max-w-lg bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-orange-100 flex flex-col sm:flex-row items-center"
       aria-labelledby={`product-${id}`}
     >
-      {/* Container de Imagem */}
-      <div className="relative w-full h-48 sm:h-56 bg-neutral-100">
-        {imagem_url ? (
+      {/* Container de Imagem (Opcional caso venha imagem da planilha) */}
+      {imagem_url && (
+        <div className="relative w-full sm:w-40 h-48 sm:h-auto bg-neutral-100 shrink-0">
           <Image
             src={imagem_url}
             alt={`Imagem de ${nome}`}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, 160px"
             className="object-cover"
             priority={priority}
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-neutral-200">
-            <span className="text-neutral-400 text-sm">Sem imagem</span>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Conteúdo do Card */}
-      <div className="p-5 sm:p-6 space-y-3">
-        {/* Nome do Produto */}
+      <div className="p-5 sm:p-6 space-y-2 flex-1 text-center sm:text-left w-full">
+        {/* Nome do Produto em Azul Royal */}
         <h3
           id={`product-${id}`}
-          className="text-xl sm:text-2xl font-bold text-secondary line-clamp-2"
+          className="text-lg sm:text-xl font-bold text-[#004AAD] font-poppins"
         >
           {nome}
         </h3>
 
-        {/* Descrição */}
-        {descricao && (
-          <p className="text-sm sm:text-base text-neutral-600 line-clamp-3 leading-relaxed">
+        {/* Descrição (Oculta se for apenas um traço "-") */}
+        {descricao && descricao !== '-' && (
+          <p className="text-sm text-neutral-600 line-clamp-2 leading-relaxed">
             {descricao}
           </p>
         )}
 
-        {/* Preço */}
-        <div className="pt-2 border-t border-neutral-100">
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
+        {/* Preço em Destaque Laranja */}
+        <div className="pt-2">
+          <span className="inline-block bg-[#FF8C00] text-white font-extrabold font-poppins px-3.5 py-1 rounded-xl text-base shadow-sm">
             {formatPrice(preco)}
-          </p>
+          </span>
         </div>
       </div>
     </article>
