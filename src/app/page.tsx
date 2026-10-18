@@ -3,6 +3,7 @@ import { connection } from 'next/server';
 import Link from 'next/link';
 import { getProducts } from '@/lib/sheets';
 import { filterAvailableProducts, groupByCategory } from '@/lib/utils';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 async function CategoryList() {
   await connection();
@@ -20,14 +21,15 @@ async function CategoryList() {
 
   return (
     <nav className="flex flex-col items-center gap-4 my-2">
-      {categories.map((cat) => (
-        <Link
-          key={cat.name}
-          href={`/categoria/${encodeURIComponent(cat.name)}`}
-          className="text-xl sm:text-2xl font-extrabold text-white font-poppins uppercase tracking-wider hover:text-[#004AAD] transition-all transform hover:scale-105 text-center drop-shadow-md"
-        >
-          {cat.name}
-        </Link>
+      {categories.map((cat, index) => (
+        <ScrollReveal key={cat.name} delay={index * 80}>
+          <Link
+            href={`/categoria/${encodeURIComponent(cat.name)}`}
+            className="text-xl sm:text-2xl font-extrabold text-white font-poppins uppercase tracking-wider hover:text-[#004AAD] transition-all transform hover:scale-105 text-center drop-shadow-md block"
+          >
+            {cat.name}
+          </Link>
+        </ScrollReveal>
       ))}
     </nav>
   );
@@ -37,28 +39,30 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen flex flex-col justify-between items-center font-sans overflow-x-hidden bg-[#FF8C00]">
       
-      {/* 1. Imagem de Fundo (Sem alterações no gradiente ou imagem) */}
+      {/* 1. Imagem de Fundo no topo */}
       <div 
         className="absolute top-0 left-0 right-0 h-[80vh] z-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url('/bg-cardapio.jpg')` }}
       />
 
-      {/* 2. Camada de Gradiente (Mantido exatamente igual) */}
+      {/* 2. Camada de Gradiente */}
       <div className="absolute top-0 left-0 right-0 h-[80vh] z-1 bg-gradient-to-b from-black/20 via-transparent via-60% to-[#FF8C00]" />
 
-      {/* 3. Contêiner de Conteúdo - Texto posicionado exatamente no início do gradiente laranja (60vh) */}
+      {/* 3. Contêiner de Conteúdo */}
       <div className="relative z-10 w-full max-w-md flex flex-col items-center pt-[60vh] pb-8 px-4 my-auto">
         
-        {/* Título e Subtítulo */}
-        <header className="text-center mb-6">
-          <h1 className="text-3xl sm:text-5xl font-black text-white font-poppins uppercase tracking-wider drop-shadow-lg">
-            TRAGOS LEVES
-          </h1>
-          <div className="w-20 h-1.5 bg-[#004AAD] mx-auto rounded-full mt-1.5 mb-2 shadow-md"></div>
-          <p className="text-white/90 text-xs sm:text-sm font-bold uppercase tracking-widest font-poppins drop-shadow">
-            COFFEE & SURF • TOQUE EM UMA CATEGORIA
-          </p>
-        </header>
+        {/* Título e Subtítulo com Scroll Reveal */}
+        <ScrollReveal>
+          <header className="text-center mb-6">
+            <h1 className="text-3xl sm:text-5xl font-black text-white font-poppins uppercase tracking-wider drop-shadow-lg">
+              TRAGOS LEVES
+            </h1>
+            <div className="w-20 h-1.5 bg-[#004AAD] mx-auto rounded-full mt-1.5 mb-2 shadow-md"></div>
+            <p className="text-white/90 text-xs sm:text-sm font-bold uppercase tracking-widest font-poppins drop-shadow">
+              COFFEE & SURF • TOQUE EM UMA CATEGORIA
+            </p>
+          </header>
+        </ScrollReveal>
 
         {/* Lista de Categorias */}
         <main className="w-full flex flex-col items-center">
