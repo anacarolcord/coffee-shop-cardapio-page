@@ -15,12 +15,12 @@ async function CategoryList() {
   }
 
   return (
-    <nav className="flex flex-col items-center gap-6 my-6">
+    <nav className="flex flex-col items-center gap-4 my-2">
       {categories.map((cat) => (
         <Link
           key={cat.name}
           href={`/categoria/${encodeURIComponent(cat.name)}`}
-          className="text-2xl sm:text-3xl font-black text-white font-poppins uppercase tracking-wider hover:text-[#004AAD] transition-colors text-center"
+          className="text-xl sm:text-2xl font-extrabold text-white font-poppins uppercase tracking-wider hover:text-[#004AAD] transition-all transform hover:scale-105 text-center drop-shadow-md"
         >
           {cat.name}
         </Link>
@@ -31,20 +31,31 @@ async function CategoryList() {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#FF8C00] flex flex-col justify-between items-center py-12 px-4 font-sans">
-      {/* Topo / Logo */}
-      <header className="text-center mt-6">
-        <h1 className="text-4xl sm:text-5xl font-black text-white font-poppins uppercase tracking-widest mb-2">
-          Smart Menu
+    <div className="relative min-h-screen flex flex-col justify-between items-center py-8 px-4 font-sans overflow-hidden bg-[#FF8C00]">
+      
+      {/* 1. Imagem de Fundo (Visível com opacidade alta) */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-100"
+        style={{ backgroundImage: `url('/bg-cardapio.jpg')` }}
+      />
+
+      {/* 2. Gradiente Vertical Invertido (Foto em cima transparente, virando laranja sólido embaixo) */}
+      <div className="absolute inset-0 z-1 bg-gradient-to-t from-[#FF8C00] via-[#FF8C00]/30 to-transparent" />
+
+      {/* 3. Conteúdo da Página */}
+      <header className="relative z-10 text-center mt-2">
+        <h1 className="text-3xl sm:text-5xl font-black text-white font-poppins uppercase tracking-wider drop-shadow-lg">
+          Tragos Leves
         </h1>
-        <div className="w-16 h-1.5 bg-[#004AAD] mx-auto rounded-full mb-6"></div>
-        <p className="text-white/90 text-sm font-semibold uppercase tracking-wider font-poppins">
-          Toque em uma categoria
+        <div className="w-20 h-1.5 bg-[#004AAD] mx-auto rounded-full mt-1.5 mb-2 shadow-md"></div>
+        
+        <p className="text-white text-xs sm:text-sm font-bold uppercase tracking-widest font-poppins drop-shadow">
+          Coffee & Surf • Toque em uma categoria
         </p>
       </header>
 
-      {/* Lista de Categorias Estilo Referência */}
-      <main className="w-full max-w-md flex flex-col items-center">
+      {/* Lista de Categorias Centralizadas */}
+      <main className="relative z-10 w-full max-w-md flex flex-col items-center my-auto">
         <Suspense
           fallback={
             <div className="flex justify-center items-center py-10">
@@ -56,9 +67,9 @@ export default function HomePage() {
         </Suspense>
       </main>
 
-      {/* Rodapé */}
-      <footer className="text-center text-white/80 text-xs font-poppins mt-auto pt-8">
-        © Smart Menu - Cardápio Digital
+      {/* Rodapé Atualizado */}
+      <footer className="relative z-10 text-center text-white/90 text-xs font-poppins pt-2 drop-shadow font-semibold">
+        Tragos Leves Original - Cardapio Digital
       </footer>
     </div>
   );

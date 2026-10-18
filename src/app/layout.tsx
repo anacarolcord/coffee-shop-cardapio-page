@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -16,10 +17,10 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'Smart Menu - Cardápio Digital',
-  description: 'Cardápio digital premium',
+  title: 'Tragos Leves',
+  description: 'Cardápio digital',
   openGraph: {
-    title: 'Smart Menu',
+    title: 'Tragos Leves',
     description: 'Conheça nosso cardápio completo',
   },
 };
