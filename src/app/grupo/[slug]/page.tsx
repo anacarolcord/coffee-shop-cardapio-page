@@ -19,6 +19,11 @@ const SUBCATEGORY_ILLUSTRATIONS: Record<string, string> = {
   'Pra Dividir': '/10_ilustracao_paracube.png',
   'Tapioca e Cuscuz': '/08_tapioca_cuscuz.png',
   'Docinhos': '/09_brownie_e_mao.png',
+  'Caipirinhas': '/12_copo_caipirinha.png',
+  'Caipiroskas': '/05_frutas_tropicais.png',
+  'Cervejas': '/11_garrafa_e_copo.png',
+  'Sucos Naturais': '/03_banana_morango_liquidificador.png',
+  'Refrescos': '/06_coco.png',
 };
 
 async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
@@ -63,14 +68,17 @@ async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
         {hasIllustrations ? (
           /* Grid 2 colunas com ilustrações */
           <nav className="grid grid-cols-2 gap-6 w-full" aria-label={`Subcategorias de ${groupName}`}>
-            {subCategories.map((cat) => (
+            {subCategories.map((cat, index) => {
+              const isLastOdd = index === subCategories.length - 1 && subCategories.length % 2 !== 0;
+              const isMany = subCategories.length > 2 || groupName === 'Bebidas';
+              return (
               <Link
                 key={cat.name}
                 href={`/categoria/${encodeURIComponent(cat.name)}`}
-                className="group flex flex-col items-center gap-3 active:opacity-70 transition-all duration-300 hover:-translate-y-2"
+                className={`group flex flex-col items-center gap-2 active:opacity-70 transition-all duration-300 hover:-translate-y-2 ${isLastOdd ? 'col-span-2 max-w-[calc(50%-12px)] mx-auto w-full' : ''}`}
               >
                 {cat.illustration && (
-                  <div className="relative w-full h-44 illustration-white">
+                  <div className={`relative w-full illustration-white ${isMany ? 'h-32' : 'h-44'}`}>
                     <Image
                       src={cat.illustration}
                       alt=""
@@ -80,11 +88,12 @@ async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
                     />
                   </div>
                 )}
-                <p className="text-white font-bebas text-2xl sm:text-3xl leading-tight drop-shadow text-center group-hover:text-white/80 transition-colors duration-200">
+                <p className={`text-white font-bebas leading-tight drop-shadow text-center group-hover:text-white/80 transition-colors duration-200 ${isMany ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl'}`}>
                   {cat.name}
                 </p>
               </Link>
-            ))}
+              );
+            })}
           </nav>
         ) : (
           /* Lista vertical sem ilustrações */
