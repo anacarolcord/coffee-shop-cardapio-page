@@ -9,6 +9,11 @@ html {
   font-family: var(--font-bebas), cursive;
 }
 
+/* Converte ilustrações azuis para laranja #FF751F (fundo já é transparente) */
+.illustration-orange {
+  filter: hue-rotate(173deg) saturate(2) brightness(1.1);
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
