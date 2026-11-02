@@ -45,7 +45,7 @@ async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
           >
             ← Voltar
           </Link>
-          <h1 className="text-white font-bebas text-3xl sm:text-4xl tracking-wide uppercase drop-shadow leading-none">
+          <h1 className="text-white font-bebas text-3xl sm:text-4xl tracking-wide drop-shadow leading-none">
             {groupName}
           </h1>
           <div className="w-8 h-px bg-white/30" />
@@ -59,7 +59,7 @@ async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
               href={`/categoria/${encodeURIComponent(cat.name)}`}
               className="group block py-2 px-6 active:opacity-70 transition-opacity"
             >
-              <p className="text-white font-bebas text-4xl sm:text-5xl leading-tight uppercase drop-shadow group-hover:text-white/80 transition-colors duration-200">
+              <p className="text-white font-bebas text-4xl sm:text-5xl leading-tight drop-shadow group-hover:text-white/80 transition-colors duration-200">
                 {cat.name}
               </p>
             </Link>

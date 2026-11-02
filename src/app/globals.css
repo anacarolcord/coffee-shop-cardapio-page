@@ -4,6 +4,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Garante a aplicação da fonte local mesmo sem geração pelo Tailwind */
+.font-bebas {
+  font-family: var(--font-bebas), cursive;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
