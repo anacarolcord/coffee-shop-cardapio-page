@@ -1,16 +1,18 @@
-import { ProductsArraySchema, Product } from './types';
+import { ProductsArraySchema } from './types';
 
 const GOOGLE_SHEETS_API_KEY = process.env.GOOGLE_SHEETS_API_KEY!;
 const GOOGLE_SHEET_ID = process.env.GOOGLE_SHEET_ID!;
-const SHEET_RANGE = 'Produtos!A2:H1000'; // Pula header
 
+// Colunas da planilha:
+// A: Categoria | B: Nome | C: Descricao | D: Preco | E: Status | F: Imagem (URL)
+const SHEET_RANGE = 'Produtos!A2:F1000';
 
 export async function getProducts(revalidate: number = 3600) {
   try {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEET_ID}/values/${SHEET_RANGE}?key=${GOOGLE_SHEETS_API_KEY}`;
 
     const response = await fetch(url, {
-      next: { revalidate }, // ISR - revalida a cada X segundos
+      next: { revalidate },
     });
 
     if (!response.ok) {
@@ -22,36 +24,37 @@ export async function getProducts(revalidate: number = 3600) {
     const data = await response.json();
     const rows: string[][] = data.values || [];
 
-    if (rows.length === 0) {
-      return [];
-    }
+    if (rows.length === 0) return [];
 
-    // Mapeamento baseado na ordem atual das colunas na sua planilha:
-    // A: Categoria, B: Nome, C: Descricao, D: Preco, E: Status
     const products = rows.map((row, index) => {
-      const categoria = row[0] || '';
-      const nome = row[1] || '';
-      const descricao = row[2] === '-' ? null : (row[2] || null);
-      const preco = parseFloat(String(row[3] || '0').replace(',', '.'));
-      const statusStr = row[4] || 'Ativo';
-      
+      const categoria  = row[0]?.trim() || '';
+      const nome       = row[1]?.trim() || '';
+      const descricao  = row[2]?.trim();
+      const preco      = parseFloat(String(row[3] || '0').replace(',', '.'));
+      const statusStr  = row[4]?.trim() || 'Ativo';
+      const rawImagem  = row[5]?.trim() || '';
+
       const disponivel = statusStr.toUpperCase() === 'ATIVO' || statusStr.toUpperCase() === 'TRUE';
 
+      // Aceita URLs externas (http) ou caminhos locais do public/ (/)
+      const imagem_url = (rawImagem.startsWith('http') || rawImagem.startsWith('/')) ? rawImagem : null;
+
+      // Descrição "-" ou vazia → null
+      const descricaoFinal = (!descricao || descricao === '-') ? null : descricao;
+
       return {
-        id: `prod-${index + 1}`, // Gera um ID único baseado na linha
+        id: `prod-${index + 1}`,
         nome,
-        descricao,
+        descricao: descricaoFinal,
         preco,
         categoria,
-        imagem_url: null,
+        imagem_url,
         disponivel,
         ordem: index + 1,
       };
     });
 
-    // Valida com Zod
-    const validatedProducts = ProductsArraySchema.parse(products);
-    return validatedProducts;
+    return ProductsArraySchema.parse(products);
   } catch (error) {
     console.error('Erro ao buscar produtos:', error);
     throw error;

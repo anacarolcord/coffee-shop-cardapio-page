@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { connection } from 'next/server';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getProducts } from '@/lib/sheets';
 import { filterAvailableProducts, groupByCategory } from '@/lib/utils';
 import { findParentGroup } from '@/lib/groups';
@@ -27,64 +28,63 @@ async function CategoryContent({ params }: { params: Promise<{ slug: string }> }
     (c) => c.name.toLowerCase() === decodedCategory.toLowerCase()
   );
 
-  const itemCount = currentCategory?.products.length ?? 0;
-
   return (
-    <div className="min-h-screen bg-[#FFF8F3] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#1800AD] flex flex-col font-sans">
 
-      <header className="sticky top-0 z-20 bg-[#004AAD] shadow-lg">
-        <div className="relative flex items-center justify-center py-4 px-4 max-w-lg mx-auto">
+      {/* Header: logo miniatura + botão voltar */}
+      <header className="sticky top-0 z-20 bg-[#1800AD]/95 backdrop-blur-sm border-b border-white/10">
+        <div className="relative flex items-center justify-center py-3 px-4 max-w-lg mx-auto h-14">
           <Link
             href={backHref}
-            className="absolute left-4 flex items-center gap-1.5 text-white/90 font-semibold text-sm font-poppins hover:text-white transition-colors"
+            className="absolute left-4 flex items-center gap-1 text-white/60 text-xs font-poppins uppercase tracking-widest hover:text-white transition-colors"
             aria-label={`Voltar para ${backLabel}`}
           >
-            <span aria-hidden="true">←</span>
-            {backLabel}
+            ← {backLabel}
           </Link>
 
-          <div className="text-center px-20">
-            <h1 className="text-base sm:text-lg font-extrabold text-white font-poppins uppercase tracking-wider leading-tight">
-              {decodedCategory}
-            </h1>
-            {itemCount > 0 && (
-              <p className="text-white/60 text-xs font-poppins mt-0.5">
-                {itemCount} {itemCount === 1 ? 'item' : 'itens'}
-              </p>
-            )}
+          {/* Logo miniatura centralizado */}
+          <div className="relative w-28 h-7">
+            <Image
+              src="/logo.png"
+              alt="Tragos Leves"
+              fill
+              sizes="112px"
+              className="object-contain"
+              priority
+            />
           </div>
         </div>
       </header>
 
-      <main className="flex-1 py-6 px-4">
+      {/* Título da categoria */}
+      <div className="text-center pt-8 pb-4 px-4">
+        <h1 className="text-white font-bebas text-3xl tracking-wide drop-shadow">
+          {decodedCategory}
+        </h1>
+        <div className="w-8 h-px bg-white/25 mx-auto mt-3" />
+      </div>
+
+      {/* Lista de produtos */}
+      <main className="flex-1 py-4 px-4 pb-10">
         {!currentCategory || currentCategory.products.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-neutral-400 text-base font-poppins">
-              Nenhum produto encontrado.
-            </p>
-            <Link
-              href={backHref}
-              className="inline-block mt-4 text-[#004AAD] font-semibold text-sm font-poppins hover:underline"
-            >
+            <p className="text-white/50 text-sm font-poppins">Nenhum produto encontrado.</p>
+            <Link href={backHref} className="inline-block mt-4 text-white/60 text-xs font-poppins uppercase tracking-widest hover:text-white">
               ← Voltar
             </Link>
           </div>
         ) : (
-          <div className="w-full max-w-lg mx-auto flex flex-col gap-3">
+          <div className="flex flex-col gap-4 max-w-sm mx-auto">
             {currentCategory.products.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                priority={index < 3}
-              />
+              <ProductCard key={product.id} product={product} priority={index < 3} />
             ))}
           </div>
         )}
       </main>
 
-      <footer className="py-5 text-center border-t border-orange-100 mt-auto">
-        <p className="text-neutral-400 text-xs font-poppins">
-          © Tragos Leves · Cardápio Digital
+      <footer className="py-5 text-center">
+        <p className="text-white/25 text-xs font-poppins tracking-widest uppercase">
+          Tragos Leves · Cardápio Digital
         </p>
       </footer>
     </div>
@@ -95,8 +95,8 @@ export default function Page({ params }: CategoryPageProps) {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#FFF8F3] flex justify-center items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-[#004AAD]" />
+        <div className="min-h-screen bg-[#1800AD] flex justify-center items-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-4 border-white" />
         </div>
       }
     >

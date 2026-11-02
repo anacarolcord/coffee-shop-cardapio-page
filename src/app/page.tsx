@@ -26,9 +26,9 @@ async function GroupList() {
         <ScrollReveal key={group.name} delay={index * 70}>
           <Link
             href={`/grupo/${encodeURIComponent(group.name)}`}
-            className="group block py-0.5 px-6 active:opacity-70 transition-opacity"
+            className="group block py-3 px-6 active:opacity-70 transition-opacity"
           >
-            <p className="text-[#FF751F] font-bebas text-5xl sm:text-5xl leading-tight drop-shadow group-hover:text-[#FF751F]/80 transition-colors duration-200">
+            <p className="text-[#FF751F] font-bebas text-2xl sm:text-2xl leading-tight drop-shadow group-hover:text-[#FF751F]/80 transition-colors duration-200">
               {group.name}
             </p>
           </Link>
@@ -61,6 +61,7 @@ export default function HomePage() {
                 src="/logo.png"
                 alt="Tragos Leves"
                 fill
+                sizes="(max-width: 640px) 288px, 320px"
                 className="object-contain drop-shadow-xl"
                 priority
               />

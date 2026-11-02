@@ -66,12 +66,12 @@ async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
                 className="group flex flex-col items-center gap-3 active:opacity-70 transition-opacity"
               >
                 {cat.illustration && (
-                  <div className="relative w-full h-44">
+                  <div className="relative w-full h-44 illustration-white">
                     <Image
                       src={cat.illustration}
                       alt=""
                       fill
-                      className="object-contain illustration-orange"
+                      className="object-contain"
                       aria-hidden="true"
                     />
                   </div>
