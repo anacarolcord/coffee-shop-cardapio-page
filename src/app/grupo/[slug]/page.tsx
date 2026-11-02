@@ -15,6 +15,10 @@ interface GrupoPageProps {
 const SUBCATEGORY_ILLUSTRATIONS: Record<string, string> = {
   'Cafés Quentes': '/01_coador_e_xicaras.png',
   'Cafés Gelados': '/02_cafe_gelado.png',
+  'Pra Matar a Fome': '/07_pessoa_bebendo.png',
+  'Pra Dividir': '/10_ilustracao_paracube.png',
+  'Tapioca e Cuscuz': '/08_tapioca_cuscuz.png',
+  'Docinhos': '/09_brownie_e_mao.png',
 };
 
 async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
@@ -63,7 +67,7 @@ async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
               <Link
                 key={cat.name}
                 href={`/categoria/${encodeURIComponent(cat.name)}`}
-                className="group flex flex-col items-center gap-3 active:opacity-70 transition-opacity"
+                className="group flex flex-col items-center gap-3 active:opacity-70 transition-all duration-300 hover:-translate-y-2"
               >
                 {cat.illustration && (
                   <div className="relative w-full h-44 illustration-white">
@@ -89,7 +93,7 @@ async function GrupoContent({ params }: { params: Promise<{ slug: string }> }) {
               <Link
                 key={cat.name}
                 href={`/categoria/${encodeURIComponent(cat.name)}`}
-                className="group block py-2 px-6 active:opacity-70 transition-opacity"
+                className="group block py-2 px-6 active:opacity-70 transition-all duration-300 hover:-translate-y-1"
               >
                 <p className="text-white font-bebas text-4xl sm:text-5xl leading-tight drop-shadow group-hover:text-white/80 transition-colors duration-200">
                   {cat.name}

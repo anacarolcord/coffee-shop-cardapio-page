@@ -7,7 +7,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
   return (
     <article
-      className="w-full bg-white rounded-2xl overflow-hidden shadow-lg"
+      className="w-full bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       aria-labelledby={`product-${id}`}
     >
       {/* Imagem do produto (quando disponível) */}

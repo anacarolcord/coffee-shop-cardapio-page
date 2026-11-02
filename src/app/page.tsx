@@ -26,7 +26,7 @@ async function GroupList() {
         <ScrollReveal key={group.name} delay={index * 70}>
           <Link
             href={`/grupo/${encodeURIComponent(group.name)}`}
-            className="group block py-3 px-6 active:opacity-70 transition-opacity"
+            className="group block py-3 px-6 active:opacity-70 transition-all duration-300 hover:-translate-y-1"
           >
             <p className="text-[#FF751F] font-bebas text-2xl sm:text-2xl leading-tight drop-shadow group-hover:text-[#FF751F]/80 transition-colors duration-200">
               {group.name}
