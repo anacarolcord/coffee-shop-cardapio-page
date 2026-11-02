@@ -2,8 +2,8 @@
 export const GROUP_CATEGORIES: Record<string, string[]> = {
   'Cafés': ['Cafés Quentes', 'Cafés Gelados'],
   'Comidas': ['Pra Matar a Fome', 'Pra Dividir', 'Tapioca e Cuscuz', 'Docinhos'],
-  'Bebidas Alcoólicas': ['Caipirinhas', 'Caipiroskas', 'Cervejas'],
   'Bebidas': ['Sucos Naturais', 'Refrescos'],
+  'Bebidas Alcoólicas': ['Caipirinhas', 'Caipiroskas', 'Cervejas'],
 };
 
 // Retorna o grupo pai de uma sub-categoria, ou null se não encontrar
