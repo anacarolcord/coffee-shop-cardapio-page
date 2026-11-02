@@ -1,7 +1,6 @@
-import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Inter, Poppins, Lilita_One } from 'next/font/google';
 import './globals.css';
-
 
 const inter = Inter({
   subsets: ['latin'],
@@ -10,18 +9,34 @@ const inter = Inter({
 });
 
 const poppins = Poppins({
-  weight: ['600', '700', '800'],
+  weight: ['400', '600', '700', '800'],
   subsets: ['latin'],
   variable: '--font-poppins',
   display: 'swap',
 });
 
+// Lilita One: bold, arredondada, expressiva — próxima da Maniera usada no stacks.menu
+const lilitaOne = Lilita_One({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-bebas',
+  display: 'swap',
+});
+
+export const viewport: Viewport = {
+  themeColor: '#1800AD',
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  title: 'Tragos Leves',
-  description: 'Cardápio digital',
+  title: 'Tragos Leves | Cardápio Digital',
+  description: 'Cardápio completo do Tragos Leves. Cafés, caipirinhas, sucos, petiscos e muito mais.',
   openGraph: {
-    title: 'Tragos Leves',
-    description: 'Conheça nosso cardápio completo',
+    title: 'Tragos Leves | Cardápio Digital',
+    description: 'Cardápio completo do Tragos Leves. Cafés, caipirinhas, sucos, petiscos e muito mais.',
+    type: 'website',
+    locale: 'pt_BR',
   },
 };
 
@@ -31,8 +46,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${poppins.variable}`}>
-      <body className="font-sans">{children}</body>
+    <html lang="pt-BR" className={`${inter.variable} ${poppins.variable} ${lilitaOne.variable}`}>
+      <body className="font-sans antialiased">{children}</body>
     </html>
   );
 }

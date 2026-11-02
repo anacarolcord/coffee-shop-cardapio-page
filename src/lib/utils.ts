@@ -26,7 +26,7 @@ export function groupByCategory(products: Product[]): Category[] {
   // Ordena produtos dentro de cada categoria
   Object.keys(grouped).forEach(categoryName => {
     grouped[categoryName].sort((a, b) => {
-      if (a.ordem !== undefined && b.ordem !== undefined) {
+      if (a.ordem != null && b.ordem != null) {
         return a.ordem - b.ordem;
       }
       return a.nome.localeCompare(b.nome);

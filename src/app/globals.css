@@ -1,7 +1,14 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
 
-/* Animação de entrada com subida suave e fade-in */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Entrada suave usada no ScrollReveal */
 @keyframes fadeInUp {
   from {
     opacity: 0;

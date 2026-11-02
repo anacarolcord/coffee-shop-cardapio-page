@@ -1,33 +1,36 @@
 import { Suspense } from 'react';
 import { connection } from 'next/server';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getProducts } from '@/lib/sheets';
 import { filterAvailableProducts, groupByCategory } from '@/lib/utils';
+import { GROUP_CATEGORIES } from '@/lib/groups';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
-async function CategoryList() {
+async function GroupList() {
   await connection();
   const allProducts = await getProducts();
   const availableProducts = filterAvailableProducts(allProducts);
   const categories = groupByCategory(availableProducts);
 
-  if (categories.length === 0) {
-    return (
-      <p className="text-white text-center font-poppins">
-        Nenhuma categoria encontrada.
-      </p>
-    );
-  }
+  const categoryMap = new Map(categories.map((c) => [c.name, c.products.length]));
+
+  const groups = Object.entries(GROUP_CATEGORIES).map(([groupName, catNames]) => {
+    const totalItems = catNames.reduce((sum, cat) => sum + (categoryMap.get(cat) ?? 0), 0);
+    return { name: groupName, totalItems };
+  });
 
   return (
-    <nav className="flex flex-col items-center gap-4 my-2">
-      {categories.map((cat, index) => (
-        <ScrollReveal key={cat.name} delay={index * 80}>
+    <nav className="flex flex-col items-center w-full text-center" aria-label="Categorias do cardápio">
+      {groups.map((group, index) => (
+        <ScrollReveal key={group.name} delay={index * 70}>
           <Link
-            href={`/categoria/${encodeURIComponent(cat.name)}`}
-            className="text-xl sm:text-2xl font-extrabold text-white font-poppins uppercase tracking-wider hover:text-[#004AAD] transition-all transform hover:scale-105 text-center drop-shadow-md block"
+            href={`/grupo/${encodeURIComponent(group.name)}`}
+            className="group block py-1.5 px-6 active:opacity-70 transition-opacity"
           >
-            {cat.name}
+            <p className="text-white font-bebas text-2xl sm:text-2xl leading-tight uppercase drop-shadow group-hover:text-white/80 transition-colors duration-200">
+              {group.name}
+            </p>
           </Link>
         </ScrollReveal>
       ))}
@@ -37,51 +40,50 @@ async function CategoryList() {
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen flex flex-col justify-between items-center font-sans overflow-x-hidden bg-[#FF8C00]">
-      
-      {/* 1. Imagem de Fundo no topo */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-[80vh] z-0 bg-cover bg-center bg-no-repeat"
+    <div className="relative min-h-screen flex flex-col items-center font-sans overflow-x-hidden bg-[#1800AD]">
+
+      {/* Imagem de fundo */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[65vh] z-0 bg-cover bg-[center_25%] bg-no-repeat"
         style={{ backgroundImage: `url('/bg-cardapio.jpg')` }}
       />
 
-      {/* 2. Camada de Gradiente */}
-      <div className="absolute top-0 left-0 right-0 h-[80vh] z-1 bg-gradient-to-b from-black/20 via-transparent via-60% to-[#FF8C00]" />
+      {/* Gradiente: foto → cor sólida */}
+      <div className="absolute top-0 left-0 right-0 h-[65vh] z-[1] bg-gradient-to-b from-black/50 via-black/30 via-40% to-[#1800AD]" />
 
-      {/* 3. Contêiner de Conteúdo */}
-      <div className="relative z-10 w-full max-w-md flex flex-col items-center pt-[60vh] pb-8 px-4 my-auto">
-        
-        {/* Título e Subtítulo com Scroll Reveal */}
+      {/* Conteúdo centralizado na tela */}
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center justify-center min-h-screen py-12 px-4 gap-8">
+
         <ScrollReveal>
-          <header className="text-center mb-6">
-            <h1 className="text-3xl sm:text-5xl font-black text-white font-poppins uppercase tracking-wider drop-shadow-lg">
-              TRAGOS LEVES
-            </h1>
-            <div className="w-20 h-1.5 bg-[#004AAD] mx-auto rounded-full mt-1.5 mb-2 shadow-md"></div>
-            <p className="text-white/90 text-xs sm:text-sm font-bold uppercase tracking-widest font-poppins drop-shadow">
-              COFFEE & SURF • TOQUE EM UMA CATEGORIA
-            </p>
+          <header className="text-center flex flex-col items-center">
+            <div className="relative w-72 h-[67px] sm:w-80 sm:h-[74px]">
+              <Image
+                src="/logo.png"
+                alt="Tragos Leves"
+                fill
+                className="object-contain drop-shadow-xl"
+                priority
+              />
+            </div>
           </header>
         </ScrollReveal>
 
-        {/* Lista de Categorias */}
-        <main className="w-full flex flex-col items-center">
+        <main className="w-full">
           <Suspense
             fallback={
-              <div className="flex justify-center items-center py-10">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+              <div className="flex justify-center items-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
               </div>
             }
           >
-            <CategoryList />
+            <GroupList />
           </Suspense>
         </main>
-      </div>
 
-      {/* Rodapé */}
-      <footer className="relative z-10 text-center text-white/90 text-xs font-poppins pb-6 pt-2 drop-shadow font-semibold">
-        Tragos Leves Original - Cardápio Digital
-      </footer>
+        <footer className="text-white/35 text-xs font-poppins tracking-widest uppercase">
+          Tragos Leves · Cardápio Digital
+        </footer>
+      </div>
     </div>
   );
 }
